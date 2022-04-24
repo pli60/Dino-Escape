@@ -1,12 +1,12 @@
 let config = {
-        type: Phaser.CANVAS,
+        type: Phaser.AUTO,
         width: 640,
         height: 480,
         physics:{
                 default: 'arcade',
                 arcade:{
-                        gravity:{y: 0},
-                        debug: false
+                        gravity:{x: 0, y: 300},
+                        debug: true
                 }
         },
         scene: [ Menu, Play ],
@@ -15,9 +15,16 @@ let config = {
 
 let game = new Phaser.Game(config);
 
-// set UI sizes
-let borderUISize = game.config.height / 15;
-let borderPadding = borderUISize / 3;
+// define global variables
+let centerX = game.config.width/2;
+let centerY = game.config.height/2;
+let w = game.config.width;
+let h = game.config.height;
+let score;
+let paddle = null;
+const dinoWidth = 64;
+const dinoHeight = 128;
+const dinoVelocity = 200;
 
-// reserve keyboard vars
-let keyLEFT, keyRIGHT, keyA, keyD, keySpace;
+// reserve keys
+let cursors;

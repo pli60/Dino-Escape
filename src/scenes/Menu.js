@@ -1,5 +1,3 @@
-const { Game } = require("phaser");
-
 class Menu extends Phaser.Scene {
         constructor(){
                 super("menuScene");
@@ -11,14 +9,14 @@ class Menu extends Phaser.Scene {
         }
 
         create() {
-
+                
         }
 
         update() {
                 if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
-                        game.settings = {
+                        // game.settings = {
                                 
-                        }
+                        // }
                         this.scene.start('playScene');
                 }
         }

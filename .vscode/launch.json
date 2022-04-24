@@ -8,7 +8,7 @@
                         "type": "pwa-chrome",
                         "request": "launch",
                         "name": "Open index.html",
-                        "file": "c:\\Users\\lpf20\\Desktop\\UCSC\\CMPM 120\\Dino-runner\\index.html"
+                        "url": "http://localhost:5555"
                 }
         ]
 }
