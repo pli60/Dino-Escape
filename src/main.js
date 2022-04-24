@@ -28,3 +28,4 @@ const dinoVelocity = 200;
 
 // reserve keys
 let cursors;
+let keySPACE;
