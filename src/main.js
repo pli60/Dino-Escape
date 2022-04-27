@@ -1,7 +1,7 @@
 let config = {
         type: Phaser.AUTO,
-        width: 640,
-        height: 480,
+        width: 720,
+        height: 540,
         physics:{
                 default: 'arcade',
                 arcade:{
@@ -27,5 +27,5 @@ const dinoHeight = 128;
 const dinoVelocity = 200;
 
 // reserve keys
-let cursors;
-let keySPACE;
+let keySPACE, keyA, keyD;
+var cursors;

@@ -6,6 +6,8 @@ class Play extends Phaser.Scene {
         preload() {
                 // load images/tile sprites
                 this.load.image('dino', './assets/dino.png');
+                this.load.image('log', './assets/log.png');
+                this.load.image('tile', './assets/background.png');
         }
 
         create() {
@@ -21,7 +23,9 @@ class Play extends Phaser.Scene {
                 // this.bgm.play();
 
                 // define keys
-                cursors = this.input.keyboard.createCursorKeys();
+                keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+                keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+                keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
                 // player animation
                 // this.anims.create({
@@ -35,15 +39,17 @@ class Play extends Phaser.Scene {
                 this.bgtile = this.add.tileSprite(0, 0, 640, 480, 'tile').setOrigin(0, 0);
 
                 // create player model
-                dinosaur = this.physics.add.sprite(centerX, 0, 'dino').setOrigin(0.5);
-                dinosaur.destroyed = false;
-                dinosaur.setImmovable();
-                dinosaur.setMaxVelocity(0, 400);
-                dinosaur.setBounce(0.2);
-                dinosaur.setCollideWorldBounds(true);
-                dinosaur.body.allowGravity = false;
+                this.dinosaur = this.physics.add.sprite(centerX, h - 40, 'dino').setOrigin(0.5);
+                this.dinosaur.destroyed = false;
+                this.dinosaur.setImmovable(false);
+                // this.dinosaur.setMaxVelocity(0, 400);
+                this.dinosaur.setVelocityX(0);
+                this.dinosaur.setBounce(0.2);
+                this.dinosaur.setCollideWorldBounds(true);
+                this.dinosaur.body.allowGravity = false;
                 
-                this.physics.add.collider(dinosaur, this.ObstacleGroup);
+                // add keys
+                cursors = this.input.keyboard.createCursorKeys();
 
                 // obstacle group
                 this.ObstacleGroup = this.add.group();
@@ -56,7 +62,7 @@ class Play extends Phaser.Scene {
 
         update() {
                 // check for gameover
-                if (this.gameOver && cursors.SPACE.isDown) {
+                if (this.gameOver && Phaser.Input.Keyboard.JustDown(keySPACE)) {
                         this.scene.restart();
                 }
                 if (!this.gameOver) {
@@ -64,18 +70,21 @@ class Play extends Phaser.Scene {
                 }
 
                 // player movements
-                if (cursors.A.isDown) {
-                        player.setVelocityX(-200);
-                        player.anims.play('wiggle');
+                if (this.dinosaur.destroyed = false) {
+                        if (cursors.A.isDown) {
+                                this.dinosaur.setVelocityX(-200);
+                                // this.dinosaur.anims.play('wiggle');
+                        }
+                        else if (cursors.D.isDown) {
+                                this.dinosaur.setVelocityX(200);
+                                // this.dinosaur.anims.play('wiggle');
+                        }
+                        else {
+                                this.dinosaur.setVelocityX(0);
+                        }
+                        // check for collisions
+                        this.physics.world.collide(this.dinosaur, this.ObstacleGroup, this.DinoCollision, null, this);
                 }
-                else if (cursors.D.isDown) {
-                        player.setVelocityX(200);
-                        player.anims.play('wiggle');
-                }
-                else {
-                        player.setVelocityX(0);
-                }
-
         }
 
         addObstacle() {
@@ -86,17 +95,17 @@ class Play extends Phaser.Scene {
 
         DinoCollision() {
                 // if dinosaur collide, gameover
-                dinosaur.destroyed = true;
-                this.sound.play('death', { volume: 0.5 });
-                this.cameras.main.shake(2500, 0.0075);
-                dinosaur.destroy();
+                this.dinosaur.destroyed = true;
+                // this.sound.play('death', { volume: 0.5 });
+                this.cameras.main.shake(1000, 0.0075);
+                this.dinosaur.destroy();
                 // display gameover
 
 
                 // after gameover, delay 3 seconds and go to menu
                 this.time.delayedCall(3000, () => {
+                        this.gameOver = true;
                         this.scene.start('menuScene');
                 });
         }
-
 }

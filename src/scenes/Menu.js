@@ -5,11 +5,12 @@ class Menu extends Phaser.Scene {
 
         preload() {
                 // load audio
-                this.load.audio('sfx_select', './assets/select.wav');
+                this.load.audio('select', './assets/select.wav');
         }
 
         create() {
-                
+                // define keys
+                keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         }
 
         update() {
