@@ -11,7 +11,7 @@ class Play extends Phaser.Scene {
 
                 this.load.spritesheet('dino', './assets/dino.png', {frameWidth: 50, frameHeight: 102, startFrame: 0, endFrame: 7});
         }
-
+                
         create() {
                 this.gameOver = false;
 
@@ -104,7 +104,6 @@ class Play extends Phaser.Scene {
                 this.cameras.main.shake(1000, 0.0075);
                 this.dinosaur.destroy();
                 // display gameover
-
 
                 // after gameover, delay 3 seconds and go to menu
                 this.time.delayedCall(3000, () => {
