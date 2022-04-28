@@ -9,7 +9,7 @@ class Play extends Phaser.Scene {
                 this.load.image('log', './assets/log.png');
                 this.load.image('tile', './assets/background.png');
         }
-
+                
         create() {
                 this.gameOver = false;
 
@@ -100,7 +100,6 @@ class Play extends Phaser.Scene {
                 this.cameras.main.shake(1000, 0.0075);
                 this.dinosaur.destroy();
                 // display gameover
-
 
                 // after gameover, delay 3 seconds and go to menu
                 this.time.delayedCall(3000, () => {
