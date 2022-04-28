@@ -5,9 +5,11 @@ class Play extends Phaser.Scene {
 
         preload() {
                 // load images/tile sprites
-                this.load.image('dino', './assets/dino.png');
+                //this.load.image('dino', './assets/dino.png');
                 this.load.image('log', './assets/log.png');
                 this.load.image('tile', './assets/background.png');
+
+                this.load.spritesheet('dino', './assets/dino.png', {frameWidth: 50, frameHeight: 102, startFrame: 0, endFrame: 7});
         }
 
         create() {
@@ -27,20 +29,21 @@ class Play extends Phaser.Scene {
                 keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
                 keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-                // player animation
-                // this.anims.create({
-                //         key: 'wiggle',
-                //         frames: this.anims.generateFrameNumbers('dino', { start: 0, end: 1 }),
-                //         frameRate: 30,
-                //         repeat: -1
-                //     });
+                //player animation
+                this.anims.create({
+                        key: 'wiggle',
+                        frames: this.anims.generateFrameNumbers('dino', { start: 0, end: 7 }),
+                        frameRate: 30,
+                        repeat: -1
+                    });
 
                 // place tile sprite
-                this.bgtile = this.add.tileSprite(0, 0, 640, 480, 'tile').setOrigin(0, 0);
+                this.bgtile = this.add.tileSprite(0, 0, 720, 540, 'tile').setOrigin(0, 0);
 
                 // create player model
                 this.dinosaur = this.physics.add.sprite(centerX, h - 40, 'dino').setOrigin(0.5);
                 this.dinosaur.destroyed = false;
+                this.dinosaur.anims.play('wiggle');
                 this.dinosaur.setImmovable(false);
                 // this.dinosaur.setMaxVelocity(0, 400);
                 this.dinosaur.setVelocityX(0);
@@ -70,12 +73,13 @@ class Play extends Phaser.Scene {
                 }
 
                 // player movements
-                if (this.dinosaur.destroyed = false) {
-                        if (cursors.A.isDown) {
+                if (this.dinosaur.destroyed == false) {
+                        if (keyA.isDown) {
                                 this.dinosaur.setVelocityX(-200);
+
                                 // this.dinosaur.anims.play('wiggle');
                         }
-                        else if (cursors.D.isDown) {
+                        else if (keyD.isDown) {
                                 this.dinosaur.setVelocityX(200);
                                 // this.dinosaur.anims.play('wiggle');
                         }
@@ -89,7 +93,7 @@ class Play extends Phaser.Scene {
 
         addObstacle() {
                 // create new obstacles
-                let obstacle = new Obstacle(this, 400);
+                let obstacle = new Obstacle(this, 300);
                 this.ObstacleGroup.add(obstacle);
         }
 
