@@ -24,8 +24,9 @@ let score;
 let paddle = null;
 const dinoWidth = 64;
 const dinoHeight = 128;
-const dinoVelocity = 200;
+//const dinoVelocity = 200;
 
 // reserve keys
-let keySPACE, keyA, keyD;
+let keySPACE, keyA, keyD, keyDASH;
 var cursors;
+
