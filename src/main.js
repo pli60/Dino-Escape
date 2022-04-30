@@ -27,5 +27,6 @@ const dinoHeight = 128;
 const dinoVelocity = 200;
 
 // reserve keys
-let keySPACE, keyA, keyD;
+let keySPACE, keyA, keyD, keyDASH;
 var cursors;
+
