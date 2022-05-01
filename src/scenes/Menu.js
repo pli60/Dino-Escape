@@ -5,7 +5,7 @@ class Menu extends Phaser.Scene {
 
         preload() {
                 // load audio
-                this.load.audio('select', './assets/select.wav');
+                this.load.audio('select', './assets/select.mp3');
         }
 
         create() {
@@ -18,6 +18,7 @@ class Menu extends Phaser.Scene {
                         // game.settings = {
                                 
                         // }
+                        this.sound.play('select');
                         this.scene.start('playScene');
                 }
         }

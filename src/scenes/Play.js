@@ -9,11 +9,14 @@ class Play extends Phaser.Scene {
         }
 
         preload() {
-                // load images/tile sprites
+                // load sfx & background music
+                this.load.audio('collision', './assets/knockdown.wav');
+                this.load.audio('music', './assets/dinosong2.mp3');
+                this.load.audio('dash', './assets/dash.mp3');
+
                 //this.load.image('dino', './assets/dino.png');
                 this.load.image('log', './assets/log.png');
                 this.load.image('tile', './assets/background.png');
-
                 this.load.spritesheet('dino', './assets/dino.png', {frameWidth: 50, frameHeight: 102, startFrame: 0, endFrame: 7});
         }
                 
@@ -21,13 +24,13 @@ class Play extends Phaser.Scene {
                 this.gameOver = false;
 
                 // play bgm
-                // this.bgm = this.sound.add('bgm', {
-                //         mute: false,
-                //         volume: 1,
-                //         rate: 1,
-                //         loop: true
-                // });
-                // this.bgm.play();
+                this.bgm = this.sound.add('music', {
+                        mute: false,
+                        volume: 0.6,
+                        rate: 1,
+                        loop: true
+                });
+                this.bgm.play();
 
                 // define keys
                 keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -117,7 +120,6 @@ class Play extends Phaser.Scene {
                 menuConfig.color = '#000';
                 menuConfig.fontSize= '22px',
                 this.Text2 = this.add.text(game.config.width/2, game.config.height/3 * 2, '[Press SPACE to start]', menuConfig).setOrigin(0.5);
-                // spawning obstacles
 
         }
 
@@ -153,10 +155,12 @@ class Play extends Phaser.Scene {
                                         if(keyA.isDown){
                                                 this.speed = -960;
                                                 this.dinosaur.anims.play('Ldash');
+                                                this.sound.play('dash');
                                         }
                                         else if(keyD.isDown){
                                                 this.speed = 960;
                                                 this.dinosaur.anims.play('Rdash');
+                                                this.sound.play('dash');
                                         }
                                         
                                 }
@@ -165,15 +169,12 @@ class Play extends Phaser.Scene {
                                                 this.speed -=60;
                                         }
 
-
-                                        // this.dinosaur.anims.play('wiggle');
                                 }
                                 else if (keyD.isDown) {
                                         if(this.speed < this.speedCap) {
                                                 this.speed += 60;
                                         }
 
-                                        // this.dinosaur.anims.play('wiggle');
                                 }
                                 else {
                                         if(this.speed > 0) {
@@ -207,7 +208,7 @@ class Play extends Phaser.Scene {
                 }else{
                         //lerp bgspeed to 0
                         this.bgspeed = this.lerp(4, 0, this.progress/3000);
-                        this.bgtile.tilePositionY -= this.bgspeed;z
+                        this.bgtile.tilePositionY -= this.bgspeed;
                         if(this.progress < 3000) {      
                                 this.progress += delta;
                         }else{
@@ -219,12 +220,9 @@ class Play extends Phaser.Scene {
         }
 
         addObstacle(num = 1) {
-                // create new obstacles
-                
                 //spawn num times
                 if(!this.gameOver) {
                         for (let i = 0; i < num; i++) {
-
                                 let obstacle = new Obstacle(this, 250);
                                 obstacle.setScale(0.5,0.5)
                                 this.ObstacleGroup.add(obstacle);
@@ -278,7 +276,8 @@ class Play extends Phaser.Scene {
                 // if dinosaur collide, gameover
                 this.gameOver = true;
                 this.dinosaur.destroyed = true;
-                // this.sound.play('death', { volume: 0.5 });
+                this.sound.play('collision');
+                this.bgm.stop();
                 this.cameras.main.shake(1000, 0.0075);
                 this.dinosaur.destroy();
                 // display gameover
@@ -289,9 +288,8 @@ class Play extends Phaser.Scene {
                 //loop through all object from group and stop them
                 this.ObstacleGroup.getChildren().forEach(this.stopMove, this);
 
-
-                // after gameover, delay 6 seconds and go to menu
-                this.time.delayedCall(6000, () => {
+                // after gameover, delay 5 seconds and go to menu
+                this.time.delayedCall(5000, () => {
                         this.gameOver = true;
                         this.scene.start('menuScene');
                 });
