@@ -1,7 +1,7 @@
 class Rock extends Phaser.Physics.Arcade.Sprite {
         constructor(scene, velocity, sp = true) {
                 // call Phaser Physics Sprite constructor
-                super(scene, 0, 0, 'rock');
+                super(scene, 0, -100, 'rock');
                 this.randNum = Math.floor(Math.random() * 8 + 1);
                 this.anglestart =85 + this.randNum * 5;
                 this.angletest = Phaser.Math.Between(this.anglestart, this.anglestart - 40);
