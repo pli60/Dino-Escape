@@ -12,7 +12,7 @@ Creative Tilt:
 
         At the same time, we did a kind of complex level spawning system.
         The system handles two kinds of obstacles with special patterns, while still use randomness to make the game endless.
-        THe system is also designed to be able to go with dynamic difficulty, but we didn;t implement it yet.
+        THe system is also designed to be able to go with dynamic difficulty.
 
 -sytle:
         The design of the game is we tired to focus on game feed back,

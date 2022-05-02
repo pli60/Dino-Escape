@@ -7,8 +7,9 @@ class Play extends Phaser.Scene {
         lerp(start, end, amt) {
                 return (1 - amt) * start + amt * end
         }
+
         //helper clamp function
-        clamp(num, min, max){
+        clamp(min, max,num ){
                 return num < min ? min : num > max ? max : num;
         }
 
@@ -71,7 +72,7 @@ class Play extends Phaser.Scene {
                         fontFamily: 'Calibri',
                         fontSize: '28px',
                         // backgroundColor: '#F3B141',
-                        color: '#00840E',
+                        color: '#000000',
                         align: 'center',
                         padding: {
                                 top: 5,
@@ -86,14 +87,14 @@ class Play extends Phaser.Scene {
                 this.progress = 0;
 
                 // create player model
-                this.dinosaur = this.physics.add.sprite(centerX, h - 54, 'dino').setOrigin(0.5);
+                this.dinosaur = this.physics.add.sprite(centerX, h +20, 'dino').setOrigin(0.5);
                 this.dinosaur.destroyed = false;
                 this.dinosaur.anims.play('wiggle');
                 this.dinosaur.setImmovable(false);
                 // this.dinosaur.setMaxVelocity(0, 400);
                 this.dinosaur.setVelocityX(0);
                 //this.dinosaur.setBounce(0.5);
-                this.dinosaur.setCollideWorldBounds(true);
+                this.dinosaur.setCollideWorldBounds(false);
                 this.dinosaur.body.allowGravity = false;
                 this.dinosaur.body.setSize(30, 45);
 
@@ -115,35 +116,54 @@ class Play extends Phaser.Scene {
                 this.spBuffer = 1;
                 this.gameStart = false;
                 this.score = 0;
+                this.difficulty = 0.1;
 
                 //place holder for tutorial
-                this.Text1 = this.add.text(game.config.width / 2, game.config.height / 2, 'Controls: <A & D> to move, <SPACE> to dash', menuConfig).setOrigin(0.5);
+                this.Text1 = this.add.text(game.config.width / 2, game.config.height / 2 - 25, 'Controls: <A & D> to move', menuConfig).setOrigin(0.5);
+                this.Text3 = this.add.text(game.config.width / 2, game.config.height / 2 + 25, 'While moving, press <SPACE> to DASH', menuConfig).setOrigin(0.5);
                 // menuConfig.backgroundColor = '#FFFFFF';
                 menuConfig.color = '#BC1700';
-                menuConfig.fontSize = '24px';
-                this.Text2 = this.add.text(game.config.width / 2, game.config.height / 3 * 2, '[Press SPACE to start]', menuConfig).setOrigin(0.5);
+                menuConfig.fontSize = '60px';
+                this.Text2 = this.add.text(game.config.width / 2, game.config.height / 3 * 2, '[DASH to start!]', menuConfig).setOrigin(0.5);
         }
 
         update(time, delta) {
 
                 if (this.gameStart == false) {
                         //if press any key
-                        if (keyA.isDown || keyD.isDown || keySPACE.isDown || keyDASH.isDown) {
+                        if (keySPACE.isDown) {
                                 this.gameStart = true;
-                                this.time.delayedCall(1500, () => {
+                                this.time.delayedCall(3000, () => {
                                         this.addObstacle();
                                 });
                                 this.Text1.setVisible(false);
+                                this.Text3.setVisible(false);
                                 this.Text2.setVisible(false);
+                                //set the y of player
+                                //this.dinosaur.y = h - 54;
+
+                                //tween dinosaur y
+                                this.tween = this.tweens.add({
+                                        targets: this.dinosaur,
+                                        y: h - 54,
+                                        ease: 'Power2',
+                                        duration: 800,
+                                });
+                                this.sound.play('dash');
+
+
                         }
                 } else if (this.gameOver == false) {
                         this.score += delta;
+                        this.difficulty = this.lerp(1,1.6, this.clamp(0,1,this.score/90000));
+                        //this.Text1.text = this.difficulty;
+                        
                         // check for gameover
                         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keySPACE)) {
                                 this.scene.restart();
                         }
                         if (!this.gameOver) {
-                                this.bgtile.tilePositionY -= this.bgspeed;
+                                this.bgtile.tilePositionY -= this.bgspeed * this.difficulty;
                         }
 
                         // player movements & dash
@@ -208,8 +228,8 @@ class Play extends Phaser.Scene {
                         }
                 } else {
                         //lerp bgspeed to 0
-                        this.bgspeed = this.lerp(4, 0, this.progress / 3000);
-                        this.bgtile.tilePositionY -= this.bgspeed;
+                        this.endspeed = this.lerp(this.bgspeed, 0, this.progress / 3000);
+                        this.bgtile.tilePositionY -= this.endspeed;
                         if (this.progress < 3000) {
                                 this.progress += delta;
                         } else {
@@ -224,7 +244,7 @@ class Play extends Phaser.Scene {
                 //spawn num times
                 if (!this.gameOver) {
                         for (let i = 0; i < num; i++) {
-                                let obstacle = new Obstacle(this, 250);
+                                let obstacle = new Obstacle(this, 242 * this.difficulty);
                                 obstacle.setScale(0.5, 0.5)
                                 this.ObstacleGroup.add(obstacle);
                         }
@@ -236,9 +256,12 @@ class Play extends Phaser.Scene {
                         
                         //5% chance to spawn a rock
 
-                        if (Math.random() < 0.08) {
-                                this.addObstacleSpecial(Math.floor(Math.random() * 3 + 1));
-                                this.spBuffer = 2 - this.clamp(0,1,this.score/30000);
+                        if (Math.random() < 0.07 * this.difficulty) {
+                                this.spBuffer = 2 - this.clamp(0,1,this.score/45000);
+                                this.time.delayedCall(1500, () => {
+                                        this.addObstacleSpecial(Math.floor(Math.random() * 3 + 1));
+                                });
+                                //this.addObstacleSpecial(Math.floor(Math.random() * 3 + 1));
                         }
                 }
 
@@ -250,18 +273,18 @@ class Play extends Phaser.Scene {
                 for (let i = 0; i < this.randnum; i++) {
 
 
-                        let obstacle = new Rock(this, 360, true);
+                        let obstacle = new Rock(this, 360 * this.difficulty, true);
                         //obstacle.setScale(0.2,0.2)
                         //obstacle.body.setSize(50, 50);
                         this.ObstacleGroup.add(obstacle);
                 }
 
-                if (num > 0) {
-                        this.time.delayedCall(400 * Math.floor(Math.random() * 5 + 1), () => {
+                if (num != 1) {
+                        this.time.delayedCall(400 * (Math.floor(Math.random() * 5 + 1)), () => {
                                 this.addObstacleSpecial(num - 1);
                         });
                 } else {
-                        this.spBuffer = 1;
+                        this.spBuffer = 1.25 - (0.25 * this.difficulty);
                 }
         }
 
@@ -272,11 +295,6 @@ class Play extends Phaser.Scene {
 
         }
 
-        //stupidity
-        justUpdate(target) {
-                target.update();
-        }
-
 
         DinoCollision() {
                 // if dinosaur collide, gameover
@@ -285,7 +303,17 @@ class Play extends Phaser.Scene {
                 this.sound.play('collision');
                 this.bgm.stop();
                 this.cameras.main.shake(1000, 0.0075);
-                this.dinosaur.destroy();
+                //tween the player out thendestroy
+                this.tween = this.tweens.add({
+                        targets: this.dinosaur,
+                        y: h+80,
+                        ease: 'Power2',
+                        duration: 800,
+                        onComplete: () => {
+                                this.dinosaur.destroy();
+                        }
+                });
+                //this.dinosaur.destroy();
 
                 // display gameover
                 this.Text1.setText("GAME OVER");
