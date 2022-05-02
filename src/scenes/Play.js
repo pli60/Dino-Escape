@@ -1,11 +1,11 @@
 class Play extends Phaser.Scene {
-        constructor(){
+        constructor() {
                 super("playScene");
         }
 
         //lerp helper function
-        lerp (start, end, amt){
-                return (1-amt)*start+amt*end
+        lerp(start, end, amt) {
+                return (1 - amt) * start + amt * end
         }
 
         preload() {
@@ -17,16 +17,16 @@ class Play extends Phaser.Scene {
                 //this.load.image('dino', './assets/dino.png');
                 this.load.image('log', './assets/log.png');
                 this.load.image('tile', './assets/background.png');
-                this.load.spritesheet('dino', './assets/dino.png', {frameWidth: 50, frameHeight: 102, startFrame: 0, endFrame: 7});
+                this.load.spritesheet('dino', './assets/dino.png', { frameWidth: 50, frameHeight: 102, startFrame: 0, endFrame: 7 });
         }
-                
+
         create() {
                 this.gameOver = false;
 
                 // play bgm
                 this.bgm = this.sound.add('music', {
                         mute: false,
-                        volume: 0.6,
+                        volume: 0.3,
                         rate: 1,
                         loop: true
                 });
@@ -46,14 +46,14 @@ class Play extends Phaser.Scene {
                         frames: this.anims.generateFrameNumbers('dino', { start: 0, end: 7 }),
                         frameRate: 30,
                         repeat: -1
-                    });
+                });
                 this.anims.create({
                         key: 'Rdash',
                         frames: this.anims.generateFrameNumbers('dino', { start: 4, end: 6 }),
                         frameRate: 30,
 
                 });
-                        this.anims.create({
+                this.anims.create({
                         key: 'Ldash',
                         frames: this.anims.generateFrameNumbers('dino', { start: 0, end: 2 }),
                         frameRate: 30,
@@ -63,17 +63,17 @@ class Play extends Phaser.Scene {
 
                 //place holder for text
                 let menuConfig = {
-                        fontFamily: 'Courier',
+                        fontFamily: 'Calibri',
                         fontSize: '28px',
-                        backgroundColor: '#F3B141',
-                        color: '#843605',
-                        align: 'right',
+                        // backgroundColor: '#F3B141',
+                        color: '#00840E',
+                        align: 'center',
                         padding: {
-                            top: 5,
-                            bottom: 5,
+                                top: 5,
+                                bottom: 5,
                         },
                         fixedWidth: 0
-                    }
+                }
 
                 // place tile sprite
                 this.bgtile = this.add.tileSprite(0, 0, 720, 540, 'tile').setOrigin(0, 0);
@@ -91,7 +91,7 @@ class Play extends Phaser.Scene {
                 this.dinosaur.setCollideWorldBounds(true);
                 this.dinosaur.body.allowGravity = false;
                 this.dinosaur.body.setSize(30, 45);
-                
+
                 // add keys
                 cursors = this.input.keyboard.createCursorKeys();
 
@@ -104,30 +104,26 @@ class Play extends Phaser.Scene {
                 this.speed = 0;
                 this.speedScale = 1;
                 this.speedCap = 240;
-
                 this.isDashing = false;
 
                 //for spawning sp
                 this.spBuffer = 1;
-
                 this.gameStart = false;
-
                 this.score = 0;
 
                 //place holder for tutorial
-                this.Text1 = this.add.text(game.config.width/2, game.config.height/2, 'Use A D to move, press SPACE to dash', menuConfig).setOrigin(0.5);
-                menuConfig.backgroundColor = '#FFFFFF';
-                menuConfig.color = '#000';
-                menuConfig.fontSize= '22px',
-                this.Text2 = this.add.text(game.config.width/2, game.config.height/3 * 2, '[Press SPACE to start]', menuConfig).setOrigin(0.5);
-
+                this.Text1 = this.add.text(game.config.width / 2, game.config.height / 2, 'Controls: <A & D> to move, <SPACE> to dash', menuConfig).setOrigin(0.5);
+                // menuConfig.backgroundColor = '#FFFFFF';
+                menuConfig.color = '#BC1700';
+                menuConfig.fontSize = '24px';
+                this.Text2 = this.add.text(game.config.width / 2, game.config.height / 3 * 2, '[Press SPACE to start]', menuConfig).setOrigin(0.5);
         }
 
-        update(time,delta) { 
+        update(time, delta) {
 
-                if(this.gameStart == false){
+                if (this.gameStart == false) {
                         //if press any key
-                        if(keyA.isDown || keyD.isDown || keySPACE.isDown || keyDASH.isDown){
+                        if (keyA.isDown || keyD.isDown || keySPACE.isDown || keyDASH.isDown) {
                                 this.gameStart = true;
                                 this.time.delayedCall(1500, () => {
                                         this.addObstacle();
@@ -135,7 +131,7 @@ class Play extends Phaser.Scene {
                                 this.Text1.setVisible(false);
                                 this.Text2.setVisible(false);
                         }
-                }else if(this.gameOver == false){
+                } else if (this.gameOver == false) {
                         this.score += delta;
                         // check for gameover
                         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keySPACE)) {
@@ -147,54 +143,54 @@ class Play extends Phaser.Scene {
 
                         // player movements & dash
                         if (this.dinosaur.destroyed == false) {
-                                if(Phaser.Input.Keyboard.JustDown(keySPACE) && this.isDashing == false) {
+                                if (Phaser.Input.Keyboard.JustDown(keySPACE) && this.isDashing == false) {
                                         this.speedScale = 5;
                                         this.isDashing = true;
                                         this.dinosaur.anims.stop();
                                         this.cameras.main.shake(100, 0.002);
-                                        if(keyA.isDown){
+                                        if (keyA.isDown) {
                                                 this.speed = -960;
                                                 this.dinosaur.anims.play('Ldash');
                                                 this.sound.play('dash');
                                         }
-                                        else if(keyD.isDown){
+                                        else if (keyD.isDown) {
                                                 this.speed = 960;
                                                 this.dinosaur.anims.play('Rdash');
                                                 this.sound.play('dash');
                                         }
-                                        
+
                                 }
                                 if (keyA.isDown) {
-                                        if(this.speed > -this.speedCap) {
-                                                this.speed -=60;
+                                        if (this.speed > -this.speedCap) {
+                                                this.speed -= 60;
                                         }
 
                                 }
                                 else if (keyD.isDown) {
-                                        if(this.speed < this.speedCap) {
+                                        if (this.speed < this.speedCap) {
                                                 this.speed += 60;
                                         }
 
                                 }
                                 else {
-                                        if(this.speed > 0) {
+                                        if (this.speed > 0) {
                                                 this.speed -= 20;
-                                        }else if(this.speed < 0) {
+                                        } else if (this.speed < 0) {
                                                 this.speed += 20;
                                         }
                                 }
-                                if(this.isDashing) {
+                                if (this.isDashing) {
                                         this.speedScale -= 0.2;
                                         // if(this.speedCap > 240) {
                                         //         this.speedCap -= 120;
                                         // }
-                                        
-                                        if(this.speed > 240) {
+
+                                        if (this.speed > 240) {
                                                 this.speed -= 40;
-                                        }else if(this.speed < -240) {
+                                        } else if (this.speed < -240) {
                                                 this.speed += 40;
                                         }
-                                        if(this.speedScale < 1) {
+                                        if (this.speedScale < 1) {
                                                 this.dinosaur.anims.play('wiggle');
                                                 this.isDashing = false;
                                                 this.speedScale = 1;
@@ -205,36 +201,36 @@ class Play extends Phaser.Scene {
                                 // check for collisions
                                 this.physics.world.collide(this.dinosaur, this.ObstacleGroup, this.DinoCollision, null, this);
                         }
-                }else{
+                } else {
                         //lerp bgspeed to 0
-                        this.bgspeed = this.lerp(4, 0, this.progress/3000);
+                        this.bgspeed = this.lerp(4, 0, this.progress / 3000);
                         this.bgtile.tilePositionY -= this.bgspeed;
-                        if(this.progress < 3000) {      
+                        if (this.progress < 3000) {
                                 this.progress += delta;
-                        }else{
+                        } else {
                                 this.progress = 3000;
                         }
                 }
-                
+
                 //this.ObstacleGroup.getChildren().forEach(this.stopMove, this);
         }
 
         addObstacle(num = 1) {
                 //spawn num times
-                if(!this.gameOver) {
+                if (!this.gameOver) {
                         for (let i = 0; i < num; i++) {
                                 let obstacle = new Obstacle(this, 250);
-                                obstacle.setScale(0.5,0.5)
+                                obstacle.setScale(0.5, 0.5)
                                 this.ObstacleGroup.add(obstacle);
                         }
-                        
+
                         this.time.delayedCall(1000 * Math.floor(Math.random() * 2 + 1) * this.spBuffer, () => {
                                 this.addObstacle(Math.floor(Math.random() * 3) + 1);
                         });
-                        
+
                         //5% chance to spawn a powerup
 
-                        if(Math.random() < 0.08){
+                        if (Math.random() < 0.08) {
                                 this.addObstacleSpecial(Math.floor(Math.random() * 3 + 1));
                                 this.spBuffer = 2;
                         }
@@ -243,34 +239,34 @@ class Play extends Phaser.Scene {
         }
 
         //process string to spawn obstacles
-        addObstacleSpecial(num = 1){
+        addObstacleSpecial(num = 1) {
                 this.randnum = Math.floor(Math.random() * 3 + 1);
                 for (let i = 0; i < this.randnum; i++) {
 
                         let obstacle = new Obstacle(this, 350, true);
-                        obstacle.setScale(0.2,0.2)
+                        obstacle.setScale(0.2, 0.2)
                         //obstacle.body.setSize(50, 50);
                         this.ObstacleGroup.add(obstacle);
                 }
 
-                if(num > 0){
+                if (num > 0) {
                         this.time.delayedCall(400 * Math.floor(Math.random() * 5 + 1), () => {
-                                this.addObstacleSpecial(num-1);
+                                this.addObstacleSpecial(num - 1);
                         });
-                }else{
+                } else {
                         this.spBuffer = 1;
                 }
         }
 
-        stopMove(target){
-                target.over=true;
+        stopMove(target) {
+                target.over = true;
         }
 
         //stupidity
-        justUpdate(target){
+        justUpdate(target) {
                 target.update();
         }
-        
+
 
         DinoCollision() {
                 // if dinosaur collide, gameover
@@ -280,11 +276,13 @@ class Play extends Phaser.Scene {
                 this.bgm.stop();
                 this.cameras.main.shake(1000, 0.0075);
                 this.dinosaur.destroy();
+
                 // display gameover
                 this.Text1.setText("GAME OVER");
                 this.Text1.setVisible(true);
-                this.Text2.setText("Your score: " + Math.floor(this.score) );
+                this.Text2.setText("Your score: " + Math.floor(this.score));
                 this.Text2.setVisible(true);
+
                 //loop through all object from group and stop them
                 this.ObstacleGroup.getChildren().forEach(this.stopMove, this);
 
