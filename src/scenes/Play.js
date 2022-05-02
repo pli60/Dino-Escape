@@ -7,6 +7,10 @@ class Play extends Phaser.Scene {
         lerp(start, end, amt) {
                 return (1 - amt) * start + amt * end
         }
+        //helper clamp function
+        clamp(num, min, max){
+                return num < min ? min : num > max ? max : num;
+        }
 
         preload() {
                 // load sfx & background music
@@ -16,6 +20,7 @@ class Play extends Phaser.Scene {
 
                 //this.load.image('dino', './assets/dino.png');
                 this.load.image('log', './assets/log.png');
+                this.load.image('rock', './assets/rock.png');
                 this.load.image('tile', './assets/background.png');
                 this.load.spritesheet('dino', './assets/dino.png', { frameWidth: 50, frameHeight: 102, startFrame: 0, endFrame: 7 });
         }
@@ -228,11 +233,12 @@ class Play extends Phaser.Scene {
                                 this.addObstacle(Math.floor(Math.random() * 3) + 1);
                         });
 
-                        //5% chance to spawn a powerup
+                        
+                        //5% chance to spawn a rock
 
                         if (Math.random() < 0.08) {
                                 this.addObstacleSpecial(Math.floor(Math.random() * 3 + 1));
-                                this.spBuffer = 2;
+                                this.spBuffer = 2 - this.clamp(0,1,this.score/30000);
                         }
                 }
 
@@ -243,8 +249,9 @@ class Play extends Phaser.Scene {
                 this.randnum = Math.floor(Math.random() * 3 + 1);
                 for (let i = 0; i < this.randnum; i++) {
 
-                        let obstacle = new Obstacle(this, 350, true);
-                        obstacle.setScale(0.2, 0.2)
+
+                        let obstacle = new Rock(this, 360, true);
+                        //obstacle.setScale(0.2,0.2)
                         //obstacle.body.setSize(50, 50);
                         this.ObstacleGroup.add(obstacle);
                 }
@@ -258,8 +265,11 @@ class Play extends Phaser.Scene {
                 }
         }
 
-        stopMove(target) {
-                target.over = true;
+        stopMove(target){
+                if(target.sp == false){
+                        target.over=true;
+                }
+
         }
 
         //stupidity
