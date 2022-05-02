@@ -1,8 +1,8 @@
 /*
-Game Name: Dino-Runner
+Game Name: Dino Escape
 Group Members: Ziyi Yu, Pengfei Li, Sean Lee
-Date: 5/1/2022
-Description: Dino-Runner is a game where you can run and dash to run through obstacles as a dinosaur.
+Date: 5/2/2022
+Description: Dino Escape is a game where you can run and dash through obstacles as a dinosaur to survival as long as you can.
 
 Creative Tilt:
 -tech: 

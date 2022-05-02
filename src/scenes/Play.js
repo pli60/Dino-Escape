@@ -346,7 +346,7 @@ class Play extends Phaser.Scene {
                 //loop through all object from group and stop them
                 this.ObstacleGroup.getChildren().forEach(this.stopMove, this);
 
-                // after gameover, delay 5 seconds and go to menu
+                // after gameover, delay 5 seconds and go to menu scene
                 this.time.delayedCall(5000, () => {
                         this.gameOver = true;
                         this.scene.start('menuScene');
