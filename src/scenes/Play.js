@@ -177,11 +177,26 @@ class Play extends Phaser.Scene {
                                                 this.speed = -960;
                                                 this.dinosaur.anims.play('Ldash');
                                                 this.sound.play('dash');
+                                                //this.dinosaur.angle = -10;
+                                                //TWEEN ANGLE TO 15
+                                                this.tween = this.tweens.add({
+                                                        targets: this.dinosaur,
+                                                        angle: -15,
+                                                        ease: 'Power2',
+                                                        duration: 200,
+                                                });
                                         }
                                         else if (keyD.isDown) {
                                                 this.speed = 960;
                                                 this.dinosaur.anims.play('Rdash');
                                                 this.sound.play('dash');
+                                                this.tween = this.tweens.add({
+                                                        targets: this.dinosaur,
+                                                        angle: 15,
+                                                        ease: 'Power2',
+                                                        duration: 200,
+                                                });
+                                        
                                         }
 
                                 }
@@ -218,6 +233,13 @@ class Play extends Phaser.Scene {
                                         if (this.speedScale < 1) {
                                                 this.dinosaur.anims.play('wiggle');
                                                 this.isDashing = false;
+                                                this.tween = this.tweens.add({
+                                                        targets: this.dinosaur,
+                                                        angle: 0,
+                                                        ease: 'Power2',
+                                                        duration: 150,
+                                                });
+                                                //this.dinosaur.angle = 0;
                                                 this.speedScale = 1;
                                         }
                                 }
@@ -245,12 +267,12 @@ class Play extends Phaser.Scene {
                 if (!this.gameOver) {
                         for (let i = 0; i < num; i++) {
                                 let obstacle = new Obstacle(this, 242 * this.difficulty);
-                                obstacle.setScale(0.5, 0.5)
+                                obstacle.setScale(0.48 + 0.02 * this.difficulty, 0.49+0.01 * this.difficulty)
                                 this.ObstacleGroup.add(obstacle);
                         }
 
                         this.time.delayedCall(1000 * Math.floor(Math.random() * 2 + 1) * this.spBuffer, () => {
-                                this.addObstacle(Math.floor(Math.random() * 3) + 1);
+                                this.addObstacle(Math.floor(Math.random() * 3) + Math.floor(this.difficulty + 0.5));
                         });
 
                         
@@ -259,7 +281,7 @@ class Play extends Phaser.Scene {
                         if (Math.random() < 0.07 * this.difficulty) {
                                 this.spBuffer = 2 - this.clamp(0,1,this.score/45000);
                                 this.time.delayedCall(1500, () => {
-                                        this.addObstacleSpecial(Math.floor(Math.random() * 3 + 1));
+                                        this.addObstacleSpecial(Math.floor(Math.random() * 3 + Math.floor(this.difficulty + 0.4)));
                                 });
                                 //this.addObstacleSpecial(Math.floor(Math.random() * 3 + 1));
                         }
@@ -269,7 +291,7 @@ class Play extends Phaser.Scene {
 
         //process string to spawn obstacles
         addObstacleSpecial(num = 1) {
-                this.randnum = Math.floor(Math.random() * 3 + 1);
+                this.randnum = Math.floor(Math.random() * 3 + Math.floor(this.difficulty + 0.25));
                 for (let i = 0; i < this.randnum; i++) {
 
 
