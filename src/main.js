@@ -52,11 +52,8 @@ let w = game.config.width;
 let h = game.config.height;
 let score;
 let paddle = null;
-const dinoWidth = 50;
-const dinoHeight = 102;
 //const dinoVelocity = 200;
 
 // reserve keys
 let keySPACE, keyA, keyD, keyDASH;
 var cursors;
-
