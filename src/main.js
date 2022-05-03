@@ -7,24 +7,24 @@ Description: Dino Escape is a game where you can run and dash through obstacles 
 Creative Tilt:
 -tech: 
         One interesting design of our game is that we implemented the dashing ability utilizing physic.
-        The dashing is achieved through a lot of playtesting to get the right feeling, which is really fun.
-        We also tried to add animation, SFX and camera shake, and tried particles tring to make it the best.
+        The dashing is achieved through a lot of playtesting to get the right feeling.
+        We also tried to add animation, SFX, and camera shake to make the game more elaborate.
 
-        At the same time, we did a kind of complex level spawning system.
-        The system handles two kinds of obstacles with special patterns, while still use randomness to make the game endless.
-        THe system is also designed to be able to go with dynamic difficulty.
+        At the same time, we created a complex level spawning system.
+        The system handles two kinds of obstacles with unique patterns, while still use randomness to make the game endless.
+        The system is also designed to be able to go with dynamic difficulty.
 
 -sytle:
-        The design of the game is we tired to focus on game feed back,
-        and while tring to achieve that we implement the dashing animation and some control feedback to the player.
+        The design focus of this game is the feedback,
+        while tring to implement the dashing animation and the control feedbacks to the player.
         
         We also tried to make the endless runner special by giving it two different kinds of different obstacles,
         which is spawned with different logic that makes it two different phases of the game.
 
-        What's more, there is also logic that slowly blends the two phases together as an creative way to increase the difficulty:
+        What's more, there is also a logic that slowly blends the two phases together as an creative way to increase the difficulty:
         At the beginning, the two phase are seperated that when Rocks are spawned, Logs will be slowed.
-        When the player have built up the model for the two different differen phases,
-        The game will blend the two mode that the game will become more challenging.
+        When the player have built up the model for the two different phases,
+        The game will blend the two mode which makes more challenging.
         This is a creative approach as we are experimenting how player learns about game mechanics.
 */
 
